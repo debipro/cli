@@ -23,6 +23,9 @@ const (
 	// EnvProfile selects the active profile.
 	EnvProfile = "DEBI_PROFILE"
 
+	// EnvDebug enables verbose request logging when set to a non-empty value.
+	EnvDebug = "DEBI_DEBUG"
+
 	// ModeTest and ModeLive identify the API environment.
 	ModeTest = "test"
 	ModeLive = "live"
@@ -134,6 +137,26 @@ func (c *Config) Profiles() []string {
 	}
 	sort.Strings(names)
 	return names
+}
+
+// Get returns a single profile setting for the active profile.
+func (c *Config) Get(key string) (string, error) {
+	switch key {
+	case "mode", "api_version", "device_name":
+	default:
+		return "", fmt.Errorf("unknown key %q (allowed: mode, api_version, device_name)", key)
+	}
+	p := c.CurrentProfile()
+	switch key {
+	case "mode":
+		return p.Mode, nil
+	case "api_version":
+		return p.APIVersion, nil
+	case "device_name":
+		return p.DeviceName, nil
+	default:
+		return "", fmt.Errorf("unknown key %q", key)
+	}
 }
 
 // Set writes a single key for the active profile and persists the file.

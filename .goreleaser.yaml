@@ -74,4 +74,4 @@ docker_manifests:
 release:
   github:
     owner: debipro
-    name: debi-cli
+    name: cli

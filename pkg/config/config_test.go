@@ -1,6 +1,28 @@
 package config
 
-import "testing"
+import (
+	"path/filepath"
+	"testing"
+)
+
+func TestConfigGet(t *testing.T) {
+	dir := t.TempDir()
+	cfgFile := filepath.Join(dir, "config.toml")
+	cfg, err := New(cfgFile, "default")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := cfg.Set("mode", "test"); err != nil {
+		t.Fatal(err)
+	}
+	got, err := cfg.Get("mode")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != "test" {
+		t.Fatalf("Get(mode) = %q", got)
+	}
+}
 
 func TestConfigRoundTrip(t *testing.T) {
 	dir := t.TempDir()

@@ -27,3 +27,18 @@ jobs:
       - uses: golangci/golangci-lint-action@v7
         with:
           version: v2.12
+
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+      - run: go build -o bin/debi ./cmd/debi
+      - run: |
+          export DEBI_CONFIG_DIR="${RUNNER_TEMP}/debi"
+          mkdir -p "$DEBI_CONFIG_DIR"
+          ./bin/debi --help | grep -q customers
+          ./bin/debi spec info | grep -q Paths
+          ./bin/debi customers --help | grep -q list
