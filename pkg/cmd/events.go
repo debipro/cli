@@ -192,7 +192,7 @@ func forwardJSON(ctx context.Context, target string, payload []byte) (int, []byt
 	if err != nil {
 		return 0, nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	body, _ := io.ReadAll(resp.Body)
 	return resp.StatusCode, body, nil
 }
