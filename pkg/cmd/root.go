@@ -29,16 +29,20 @@ type App struct {
 	testFlag       bool
 	jsonFlag       bool
 	noColor        bool
+	verboseFlag    bool
 }
 
 // Execute builds the command tree and runs it.
 func Execute() error {
 	app := &App{}
-	root := app.rootCmd()
+	root, err := app.rootCmd()
+	if err != nil {
+		return err
+	}
 	return root.Execute()
 }
 
-func (a *App) rootCmd() *cobra.Command {
+func (a *App) rootCmd() (*cobra.Command, error) {
 	root := &cobra.Command{
 		Use:           "debi",
 		Short:         "debi is a command-line interface for the Debi API",
@@ -62,18 +66,24 @@ func (a *App) rootCmd() *cobra.Command {
 	pf.BoolVar(&a.testFlag, "test", false, "use the sandbox environment (api.debi-test.pro)")
 	pf.BoolVar(&a.jsonFlag, "json", false, "print raw JSON (no indentation or color)")
 	pf.BoolVar(&a.noColor, "no-color", false, "disable colorized output")
+	pf.BoolVar(&a.verboseFlag, "verbose", false, "log API requests to stderr (also enabled by DEBI_DEBUG)")
 
 	root.AddCommand(
 		a.versionCmd(),
 		a.loginCmd(),
+		a.logoutCmd(),
 		a.configCmd(),
 		a.specCmd(),
 		a.eventsCmd(),
+		a.listenCmd(),
+		a.completionCmd(),
 	)
 	a.addGenericCommands(root)
-	a.addResourceCommands(root)
+	if err := a.addResourceCommands(root); err != nil {
+		return nil, err
+	}
 
-	return root
+	return root, nil
 }
 
 // Config returns the loaded configuration, loading it on first use.
@@ -136,12 +146,25 @@ func (a *App) Client() (*debi.Client, error) {
 	}
 	mode := a.Mode(key)
 	apiVersion := a.apiVersionFlag
-	if apiVersion == "" {
-		if cfg, cerr := a.Config(); cerr == nil {
+	deviceName := ""
+	if cfg, cerr := a.Config(); cerr == nil {
+		if apiVersion == "" {
 			apiVersion = cfg.CurrentProfile().APIVersion
 		}
+		deviceName = cfg.CurrentProfile().DeviceName
 	}
-	return debi.NewClient(key, debi.BaseURLForMode(mode), apiVersion), nil
+	client := debi.NewClient(key, debi.BaseURLForMode(mode), apiVersion)
+	client.DeviceName = deviceName
+	if a.verbose() {
+		client.Logf = func(format string, args ...interface{}) {
+			fmt.Fprintf(os.Stderr, format+"\n", args...)
+		}
+	}
+	return client, nil
+}
+
+func (a *App) verbose() bool {
+	return a.verboseFlag || os.Getenv(config.EnvDebug) != ""
 }
 
 // ColorEnabled reports whether colorized output should be produced.

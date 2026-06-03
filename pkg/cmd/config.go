@@ -16,11 +16,32 @@ func (a *App) configCmd() *cobra.Command {
 	}
 	cmd.AddCommand(
 		a.configListCmd(),
+		a.configGetCmd(),
 		a.configSetCmd(),
 		a.configUseCmd(),
 		a.configUnsetCmd(),
 	)
 	return cmd
+}
+
+func (a *App) configGetCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "get <key>",
+		Short: "Print a value from the active profile (key: mode | api_version | device_name)",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cfg, err := a.Config()
+			if err != nil {
+				return err
+			}
+			value, err := cfg.Get(args[0])
+			if err != nil {
+				return err
+			}
+			fmt.Fprintln(cmd.OutOrStdout(), value)
+			return nil
+		},
+	}
 }
 
 func (a *App) configListCmd() *cobra.Command {

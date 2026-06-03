@@ -5,6 +5,7 @@ project_name: debi
 before:
   hooks:
     - go mod tidy
+    - curl -fsSL https://raw.githubusercontent.com/debipro/openapi/refs/heads/main/openapi/spec1.yaml -o pkg/spec/openapi.yaml
 
 builds:
   - id: debi
@@ -74,4 +75,4 @@ docker_manifests:
 release:
   github:
     owner: debipro
-    name: debi-cli
+    name: cli

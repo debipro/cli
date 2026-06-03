@@ -1,0 +1,94 @@
+debi billing_portal configurations create
+debi billing_portal configurations list
+debi billing_portal configurations retrieve
+debi billing_portal configurations update
+debi billing_portal sessions create
+debi completion
+debi config get
+debi config list
+debi config set
+debi config unset
+debi config use
+debi customers archive
+debi customers create
+debi customers list
+debi customers payment_methods
+debi customers restore
+debi customers retrieve
+debi customers search
+debi customers update
+debi delete
+debi events list
+debi events resend
+debi events retrieve
+debi events tail
+debi events trigger
+debi events verify
+debi exports create
+debi exports list
+debi exports retrieve
+debi gateways disable
+debi gateways enable
+debi gateways list
+debi get
+debi imports create
+debi imports list
+debi imports retrieve
+debi imports rows
+debi links create
+debi links delete
+debi links list
+debi links retrieve
+debi links send_to_customers
+debi links update
+debi listen
+debi login
+debi logout
+debi mandates create
+debi mandates list
+debi mandates restore
+debi mandates retrieve
+debi mandates revoke
+debi mandates search
+debi patch
+debi payment_methods attach
+debi payment_methods create
+debi payment_methods detach
+debi payment_methods list
+debi payment_methods retrieve
+debi payment_methods search
+debi payments cancel
+debi payments confirm
+debi payments create
+debi payments list
+debi payments match
+debi payments match_candidates
+debi payments retrieve
+debi payments retry
+debi payments search
+debi payments stop_auto_retrying
+debi payments transaction
+debi payments update
+debi post
+debi put
+debi refunds create
+debi refunds list
+debi refunds retrieve
+debi sessions create
+debi sessions retrieve
+debi spec info
+debi spec update
+debi subscriptions cancel
+debi subscriptions create
+debi subscriptions list
+debi subscriptions pause
+debi subscriptions resume
+debi subscriptions retrieve
+debi subscriptions search
+debi subscriptions update
+debi version
+debi webhooks create
+debi webhooks delete
+debi webhooks list
+debi webhooks retrieve
+debi webhooks update

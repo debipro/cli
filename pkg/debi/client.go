@@ -50,7 +50,9 @@ type Client struct {
 	APIKey     string
 	BaseURL    string
 	APIVersion string
+	DeviceName string
 	HTTPClient *http.Client
+	Logf       func(format string, args ...interface{})
 }
 
 // NewClient builds a Client for the given key and base URL.
@@ -68,6 +70,7 @@ type Request struct {
 	Method         string
 	Path           string
 	Query          url.Values
+	Headers        http.Header
 	Body           interface{}
 	IdempotencyKey string
 }
@@ -85,16 +88,16 @@ func (c *Client) Do(ctx context.Context, req Request) (*Response, error) {
 	if len(req.Query) > 0 {
 		u += "?" + req.Query.Encode()
 	}
-	return c.do(ctx, req.Method, u, req.Body, req.IdempotencyKey)
+	return c.do(ctx, req.Method, u, req.Body, req.IdempotencyKey, req.Headers)
 }
 
 // DoURL performs a request against an absolute URL (used to follow pagination
 // links returned by the API).
 func (c *Client) DoURL(ctx context.Context, method, absoluteURL string) (*Response, error) {
-	return c.do(ctx, method, absoluteURL, nil, "")
+	return c.do(ctx, method, absoluteURL, nil, "", nil)
 }
 
-func (c *Client) do(ctx context.Context, method, fullURL string, body interface{}, idempotencyKey string) (*Response, error) {
+func (c *Client) do(ctx context.Context, method, fullURL string, body interface{}, idempotencyKey string, extraHeaders http.Header) (*Response, error) {
 	var bodyReader io.Reader
 	if body != nil {
 		encoded, err := json.Marshal(body)
@@ -118,8 +121,20 @@ func (c *Client) do(ctx context.Context, method, fullURL string, body interface{
 	if c.APIVersion != "" {
 		httpReq.Header.Set("Api-Version", c.APIVersion)
 	}
+	for k, vs := range extraHeaders {
+		for _, v := range vs {
+			httpReq.Header.Add(k, v)
+		}
+	}
+	if c.DeviceName != "" {
+		httpReq.Header.Set("X-Debi-CLI-Device", c.DeviceName)
+	}
 	if idempotencyKey != "" {
 		httpReq.Header.Set("Idempotency-Key", idempotencyKey)
+	}
+
+	if c.Logf != nil {
+		c.Logf("--> %s %s", method, fullURL)
 	}
 
 	resp, err := c.HTTPClient.Do(httpReq)
@@ -134,6 +149,10 @@ func (c *Client) do(ctx context.Context, method, fullURL string, body interface{
 	}
 
 	requestID := resp.Header.Get("Request-Id")
+
+	if c.Logf != nil {
+		c.Logf("<-- %d request-id=%s", resp.StatusCode, requestID)
+	}
 
 	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
 		return &Response{StatusCode: resp.StatusCode, RequestID: requestID, Body: data}, nil

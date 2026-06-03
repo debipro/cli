@@ -17,6 +17,7 @@ func (a *App) addGenericCommands(root *cobra.Command) {
 		a.genericCmd("get", "GET", "Make an authenticated GET request to the Debi API"),
 		a.genericCmd("post", "POST", "Make an authenticated POST request to the Debi API"),
 		a.genericCmd("put", "PUT", "Make an authenticated PUT request to the Debi API"),
+		a.genericCmd("patch", "PATCH", "Make an authenticated PATCH request to the Debi API"),
 		a.genericCmd("delete", "DELETE", "Make an authenticated DELETE request to the Debi API"),
 	)
 }

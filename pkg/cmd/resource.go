@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+	"net/http"
 	"net/url"
 	"sort"
 	"strconv"
@@ -8,6 +10,7 @@ import (
 	"unicode"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 
 	"github.com/debipro/cli/pkg/debi"
 	"github.com/debipro/cli/pkg/spec"
@@ -17,14 +20,14 @@ import (
 var reservedFlags = map[string]bool{
 	"data": true, "idempotency-key": true, "auto-paginate": true, "help": true,
 	"json": true, "live": true, "test": true, "profile": true, "config": true,
-	"api-key": true, "api-version": true, "no-color": true,
+	"api-key": true, "api-version": true, "no-color": true, "verbose": true,
 }
 
 // addResourceCommands builds the resource command tree from the embedded spec.
-func (a *App) addResourceCommands(root *cobra.Command) {
+func (a *App) addResourceCommands(root *cobra.Command) error {
 	s, err := a.loadSpec()
 	if err != nil {
-		return
+		return fmt.Errorf("loading OpenAPI spec: %w", err)
 	}
 
 	cache := map[string]*cobra.Command{}
@@ -50,6 +53,7 @@ func (a *App) addResourceCommands(root *cobra.Command) {
 			parent.AddCommand(a.buildResourceCommand(path, mo.Method, mo.Operation, leaf, info.PathParams))
 		}
 	}
+	return nil
 }
 
 // opInfo is the result of analyzing a path + method into a command shape.
@@ -142,6 +146,7 @@ func (a *App) buildResourceCommand(path, method string, op *spec.Operation, leaf
 		autoPaginate   bool
 		querySetters   []func(*cobra.Command, url.Values)
 		bodySetters    []func(*cobra.Command, map[string]interface{})
+		headerSetters  []func(*cobra.Command, http.Header)
 	)
 
 	hasBody := method == "POST" || method == "PUT" || method == "PATCH"
@@ -180,6 +185,14 @@ func (a *App) buildResourceCommand(path, method string, op *spec.Operation, leaf
 				req.Query = q
 			}
 
+			headers := http.Header{}
+			for _, set := range headerSetters {
+				set(cmd, headers)
+			}
+			if len(headers) > 0 {
+				req.Headers = headers
+			}
+
 			if hasBody {
 				body, err := buildBody(data)
 				if err != nil {
@@ -214,60 +227,40 @@ func (a *App) buildResourceCommand(path, method string, op *spec.Operation, leaf
 	flags := cmd.Flags()
 
 	for _, p := range op.Parameters {
-		if p.In != "query" {
-			continue
-		}
 		name := p.Name
 		if reservedFlags[name] || flags.Lookup(name) != nil {
 			continue
 		}
-		desc := trimDesc(p.Description)
-		if p.Schema != nil && p.Schema.Type.Primary() == "boolean" {
-			val := new(bool)
-			flags.BoolVar(val, name, false, desc)
-			querySetters = append(querySetters, func(c *cobra.Command, q url.Values) {
-				if c.Flags().Changed(name) {
-					q.Set(name, strconv.FormatBool(*val))
-				}
-			})
-		} else {
-			val := new(string)
-			flags.StringVar(val, name, "", desc)
-			querySetters = append(querySetters, func(c *cobra.Command, q url.Values) {
-				if c.Flags().Changed(name) {
-					q.Set(name, *val)
-				}
-			})
+		desc := schemaDesc(p.Schema, trimDesc(p.Description))
+		switch p.In {
+		case "query":
+			a.addQueryFlag(flags, name, desc, p.Schema, &querySetters)
+		case "header":
+			if name == "Idempotency-Key" {
+				continue
+			}
+			a.addHeaderFlag(flags, name, desc, p.Schema, &headerSetters)
+		}
+		if p.Required {
+			_ = cmd.MarkFlagRequired(name)
 		}
 	}
 
 	if hasBody {
 		if schema := op.RequestBody.JSONSchema(); schema != nil {
+			required := map[string]bool{}
+			for _, r := range schema.Required {
+				required[r] = true
+			}
 			for _, prop := range schema.SortedProperties() {
 				ps := schema.Properties[prop]
 				if reservedFlags[prop] || flags.Lookup(prop) != nil {
 					continue
 				}
-				desc := trimDesc(ps.Description)
-				switch ps.Type.Primary() {
-				case "string":
-					val := new(string)
-					flags.StringVar(val, prop, "", desc)
-					bodySetters = append(bodySetters, scalarSetter(prop, func() (interface{}, bool) { return *val, true }))
-				case "integer":
-					val := new(int64)
-					flags.Int64Var(val, prop, 0, desc)
-					bodySetters = append(bodySetters, scalarSetter(prop, func() (interface{}, bool) { return *val, true }))
-				case "number":
-					val := new(float64)
-					flags.Float64Var(val, prop, 0, desc)
-					bodySetters = append(bodySetters, scalarSetter(prop, func() (interface{}, bool) { return *val, true }))
-				case "boolean":
-					val := new(bool)
-					flags.BoolVar(val, prop, false, desc)
-					bodySetters = append(bodySetters, scalarSetter(prop, func() (interface{}, bool) { return *val, true }))
-				default:
-					// objects/arrays: use -d key:=json
+				desc := schemaDesc(ps, trimDesc(ps.Description))
+				a.addBodyFlag(flags, prop, desc, ps, &bodySetters)
+				if required[prop] {
+					_ = cmd.MarkFlagRequired(prop)
 				}
 			}
 		}
@@ -282,6 +275,101 @@ func (a *App) buildResourceCommand(path, method string, op *spec.Operation, leaf
 	}
 
 	return cmd
+}
+
+func schemaDesc(s *spec.Schema, base string) string {
+	if s == nil || len(s.Enum) == 0 {
+		return base
+	}
+	values := make([]string, 0, len(s.Enum))
+	for _, v := range s.Enum {
+		values = append(values, fmt.Sprint(v))
+	}
+	sort.Strings(values)
+	return base + " (allowed: " + strings.Join(values, ", ") + ")"
+}
+
+func (a *App) addQueryFlag(flags *pflag.FlagSet, name, desc string, schema *spec.Schema, setters *[]func(*cobra.Command, url.Values)) {
+	switch schemaType(schema) {
+	case "boolean":
+		val := new(bool)
+		flags.BoolVar(val, name, false, desc)
+		*setters = append(*setters, func(c *cobra.Command, q url.Values) {
+			if c.Flags().Changed(name) {
+				q.Set(name, strconv.FormatBool(*val))
+			}
+		})
+	case "array":
+		var vals []string
+		flags.StringArrayVar(&vals, name, nil, desc)
+		*setters = append(*setters, func(c *cobra.Command, q url.Values) {
+			if c.Flags().Changed(name) {
+				q[name] = append([]string(nil), vals...)
+			}
+		})
+	default:
+		val := new(string)
+		flags.StringVar(val, name, "", desc)
+		*setters = append(*setters, func(c *cobra.Command, q url.Values) {
+			if c.Flags().Changed(name) {
+				q.Set(name, *val)
+			}
+		})
+	}
+}
+
+func (a *App) addHeaderFlag(flags *pflag.FlagSet, name, desc string, schema *spec.Schema, setters *[]func(*cobra.Command, http.Header)) {
+	val := new(string)
+	flags.StringVar(val, name, "", desc)
+	*setters = append(*setters, func(c *cobra.Command, h http.Header) {
+		if c.Flags().Changed(name) {
+			h.Set(name, *val)
+		}
+	})
+	_ = schemaType(schema)
+}
+
+func (a *App) addBodyFlag(flags *pflag.FlagSet, prop, desc string, ps *spec.Schema, setters *[]func(*cobra.Command, map[string]interface{})) {
+	switch schemaType(ps) {
+	case "integer":
+		val := new(int64)
+		flags.Int64Var(val, prop, 0, desc)
+		*setters = append(*setters, scalarSetter(prop, func() (interface{}, bool) { return *val, true }))
+	case "number":
+		val := new(float64)
+		flags.Float64Var(val, prop, 0, desc)
+		*setters = append(*setters, scalarSetter(prop, func() (interface{}, bool) { return *val, true }))
+	case "boolean":
+		val := new(bool)
+		flags.BoolVar(val, prop, false, desc)
+		*setters = append(*setters, scalarSetter(prop, func() (interface{}, bool) { return *val, true }))
+	case "array":
+		var vals []string
+		flags.StringArrayVar(&vals, prop, nil, desc)
+		*setters = append(*setters, func(c *cobra.Command, body map[string]interface{}) {
+			if c.Flags().Changed(prop) {
+				items := make([]interface{}, len(vals))
+				for i, s := range vals {
+					items[i] = s
+				}
+				setNested(body, prop, items)
+			}
+		})
+	default:
+		val := new(string)
+		flags.StringVar(val, prop, "", desc)
+		*setters = append(*setters, scalarSetter(prop, func() (interface{}, bool) { return *val, true }))
+	}
+}
+
+func schemaType(s *spec.Schema) string {
+	if s == nil {
+		return "string"
+	}
+	if s.Type.Primary() == "array" && s.Items != nil {
+		return "array"
+	}
+	return s.Type.Primary()
 }
 
 // scalarSetter writes the named property into the body when its flag changed.

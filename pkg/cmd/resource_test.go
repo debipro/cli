@@ -41,8 +41,13 @@ func TestAnalyzePath(t *testing.T) {
 // TestCommandTreeBuilds ensures the full command tree is constructed from the
 // embedded spec without duplicate-command panics.
 func TestCommandTreeBuilds(t *testing.T) {
+	t.Setenv("DEBI_CONFIG_DIR", t.TempDir())
+
 	app := &App{}
-	root := app.rootCmd()
+	root, err := app.rootCmd()
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	for _, name := range []string{"customers", "payments", "subscriptions", "events", "billing_portal"} {
 		if findChild(root, name) == nil {
