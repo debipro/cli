@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tucuota/debi-cli/pkg/keyring"
+	"github.com/debipro/cli/pkg/keyring"
 )
 
 func (a *App) configCmd() *cobra.Command {

@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tucuota/debi-cli/pkg/version"
+	"github.com/debipro/cli/pkg/version"
 )
 
 const (

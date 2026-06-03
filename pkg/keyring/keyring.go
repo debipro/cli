@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 
 	keyringlib "github.com/99designs/keyring"
-	"github.com/tucuota/debi-cli/pkg/config"
+	"github.com/debipro/cli/pkg/config"
 )
 
 const serviceName = "debi-cli"

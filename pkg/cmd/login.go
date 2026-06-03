@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 
-	"github.com/tucuota/debi-cli/pkg/config"
-	"github.com/tucuota/debi-cli/pkg/debi"
-	"github.com/tucuota/debi-cli/pkg/keyring"
+	"github.com/debipro/cli/pkg/config"
+	"github.com/debipro/cli/pkg/debi"
+	"github.com/debipro/cli/pkg/keyring"
 )
 
 func (a *App) loginCmd() *cobra.Command {

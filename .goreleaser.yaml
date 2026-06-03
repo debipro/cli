@@ -20,7 +20,7 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -s -w -X github.com/tucuota/debi-cli/pkg/version.Version={{ .Version }}
+      - -s -w -X github.com/debipro/cli/pkg/version.Version={{ .Version }}
 
 archives:
   - id: debi
@@ -47,14 +47,14 @@ changelog:
 
 dockers:
   - image_templates:
-      - "ghcr.io/tucuota/debi-cli:{{ .Version }}-amd64"
+      - "ghcr.io/debipro/cli:{{ .Version }}-amd64"
     use: buildx
     dockerfile: Dockerfile.goreleaser
     goarch: amd64
     build_flag_templates:
       - "--platform=linux/amd64"
   - image_templates:
-      - "ghcr.io/tucuota/debi-cli:{{ .Version }}-arm64"
+      - "ghcr.io/debipro/cli:{{ .Version }}-arm64"
     use: buildx
     dockerfile: Dockerfile.goreleaser
     goarch: arm64
@@ -62,16 +62,16 @@ dockers:
       - "--platform=linux/arm64"
 
 docker_manifests:
-  - name_template: "ghcr.io/tucuota/debi-cli:{{ .Version }}"
+  - name_template: "ghcr.io/debipro/cli:{{ .Version }}"
     image_templates:
-      - "ghcr.io/tucuota/debi-cli:{{ .Version }}-amd64"
-      - "ghcr.io/tucuota/debi-cli:{{ .Version }}-arm64"
-  - name_template: "ghcr.io/tucuota/debi-cli:latest"
+      - "ghcr.io/debipro/cli:{{ .Version }}-amd64"
+      - "ghcr.io/debipro/cli:{{ .Version }}-arm64"
+  - name_template: "ghcr.io/debipro/cli:latest"
     image_templates:
-      - "ghcr.io/tucuota/debi-cli:{{ .Version }}-amd64"
-      - "ghcr.io/tucuota/debi-cli:{{ .Version }}-arm64"
+      - "ghcr.io/debipro/cli:{{ .Version }}-amd64"
+      - "ghcr.io/debipro/cli:{{ .Version }}-arm64"
 
 release:
   github:
-    owner: tucuota
+    owner: debipro
     name: debi-cli

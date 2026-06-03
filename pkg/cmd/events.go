@@ -15,7 +15,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
-	"github.com/tucuota/debi-cli/pkg/debi"
+	"github.com/debipro/cli/pkg/debi"
 )
 
 func (a *App) eventsCmd() *cobra.Command {

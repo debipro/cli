@@ -9,11 +9,11 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
-	"github.com/tucuota/debi-cli/pkg/config"
-	"github.com/tucuota/debi-cli/pkg/debi"
-	"github.com/tucuota/debi-cli/pkg/keyring"
-	"github.com/tucuota/debi-cli/pkg/output"
-	"github.com/tucuota/debi-cli/pkg/spec"
+	"github.com/debipro/cli/pkg/config"
+	"github.com/debipro/cli/pkg/debi"
+	"github.com/debipro/cli/pkg/keyring"
+	"github.com/debipro/cli/pkg/output"
+	"github.com/debipro/cli/pkg/spec"
 )
 
 // App holds global flags and lazily-loaded configuration shared across all

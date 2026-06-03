@@ -6,7 +6,7 @@ RUN go mod download
 COPY . .
 ARG VERSION=docker
 RUN CGO_ENABLED=0 go build \
-    -ldflags "-s -w -X github.com/tucuota/debi-cli/pkg/version.Version=${VERSION}" \
+    -ldflags "-s -w -X github.com/debipro/cli/pkg/version.Version=${VERSION}" \
     -o /debi ./cmd/debi
 
 FROM alpine:3.20

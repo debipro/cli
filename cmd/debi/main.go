@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/tucuota/debi-cli/pkg/cmd"
+	"github.com/debipro/cli/pkg/cmd"
 )
 
 func main() {

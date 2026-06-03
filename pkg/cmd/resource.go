@@ -9,8 +9,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tucuota/debi-cli/pkg/debi"
-	"github.com/tucuota/debi-cli/pkg/spec"
+	"github.com/debipro/cli/pkg/debi"
+	"github.com/debipro/cli/pkg/spec"
 )
 
 // reservedFlags must not be shadowed by generated resource flags.

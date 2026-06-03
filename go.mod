@@ -1,4 +1,4 @@
-module github.com/tucuota/debi-cli
+module github.com/debipro/cli
 
 go 1.25.7
 
