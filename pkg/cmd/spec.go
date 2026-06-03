@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tucuota/debi-cli/pkg/spec"
+	"github.com/debipro/cli/pkg/spec"
 )
 
 func (a *App) specCmd() *cobra.Command {

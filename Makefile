@@ -1,5 +1,5 @@
 BINARY  := debi
-PKG     := github.com/tucuota/debi-cli
+PKG     := github.com/debipro/cli
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 LDFLAGS := -s -w -X $(PKG)/pkg/version.Version=$(VERSION)
 

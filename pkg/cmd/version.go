@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tucuota/debi-cli/pkg/version"
+	"github.com/debipro/cli/pkg/version"
 )
 
 func (a *App) versionCmd() *cobra.Command {

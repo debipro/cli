@@ -15,7 +15,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/tucuota/debi-cli/pkg/config"
+	"github.com/debipro/cli/pkg/config"
 )
 
 // SourceURL is the canonical home of the Debi OpenAPI specification.

@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tucuota/debi-cli/pkg/debi"
+	"github.com/debipro/cli/pkg/debi"
 )
 
 // addGenericCommands registers the low-level get/post/put/delete commands.

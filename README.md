@@ -17,13 +17,13 @@ With the CLI you can:
 ### Prebuilt binaries
 
 Download the archive for your platform from the
-[Releases page](https://github.com/tucuota/debi-cli/releases), extract it, and
+[Releases page](https://github.com/debipro/cli/releases), extract it, and
 place the `debi` binary on your `PATH`.
 
 ### Docker
 
 ```bash
-docker run --rm -e DEBI_API_KEY=sk_test_... ghcr.io/tucuota/debi-cli:latest version
+docker run --rm -e DEBI_API_KEY=sk_test_... ghcr.io/debipro/cli:latest version
 ```
 
 Inside a container there is no OS keychain, so pass your key via the
@@ -32,7 +32,7 @@ Inside a container there is no OS keychain, so pass your key via the
 ### From source
 
 ```bash
-go install github.com/tucuota/debi-cli/cmd/debi@latest
+go install github.com/debipro/cli/cmd/debi@latest
 ```
 
 ## Authentication
