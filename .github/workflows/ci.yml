@@ -26,4 +26,5 @@ jobs:
           go-version: "1.25"
       - uses: golangci/golangci-lint-action@v6
         with:
-          version: latest
+          # v1.x binaries are built with Go 1.24 and cannot analyze go 1.25+ modules
+          version: v2.12
