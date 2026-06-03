@@ -116,7 +116,7 @@ func (a *App) eventsTailCmd() *cobra.Command {
 						fmt.Fprintf(cmd.OutOrStdout(), "%s  %s  %s\n",
 							dim(e.CreatedAt), typeColor(bold(e.Type)), e.ID)
 						if forwardTo != "" {
-							if err := a.forwardEvent(ctx, client, e.ID, forwardTo, webhookSecret); err != nil {
+							if err := a.forwardEvent(ctx, cmd.ErrOrStderr(), client, e.ID, forwardTo, webhookSecret); err != nil {
 								fmt.Fprintf(cmd.ErrOrStderr(), "forward %s: %v\n", e.ID, err)
 							}
 						}
@@ -298,7 +298,7 @@ func (a *App) eventsTriggerCmd() *cobra.Command {
 	}
 }
 
-func (a *App) forwardEvent(ctx context.Context, client *debi.Client, eventID, forwardTo, webhookSecret string) error {
+func (a *App) forwardEvent(ctx context.Context, diag io.Writer, client *debi.Client, eventID, forwardTo, webhookSecret string) error {
 	resp, err := client.Do(ctx, debi.Request{
 		Method: "GET",
 		Path:   "/v1/events/" + eventID,
@@ -311,7 +311,7 @@ func (a *App) forwardEvent(ctx context.Context, client *debi.Client, eventID, fo
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(os.Stderr, "  forwarded to %s (HTTP %d)\n", forwardTo, status)
+	fmt.Fprintf(diag, "  forwarded to %s (HTTP %d)\n", forwardTo, status)
 	return nil
 }
 
@@ -365,6 +365,6 @@ func validateForwardURL(raw string) error {
 	case "127.0.0.1", "localhost", "::1":
 		return nil
 	default:
-		return fmt.Errorf("forward URL host %q is not allowed (use localhost or 127.0.0.1)", host)
+		return fmt.Errorf("forward URL host %q is not allowed (use localhost, 127.0.0.1, or ::1)", host)
 	}
 }

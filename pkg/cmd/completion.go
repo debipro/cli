@@ -18,10 +18,7 @@ func (a *App) completionCmd() *cobra.Command {
 		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
 		Args:                  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			root, err := a.rootCmd()
-			if err != nil {
-				return err
-			}
+			root := cmd.Root()
 			switch args[0] {
 			case "bash":
 				return root.GenBashCompletion(os.Stdout)

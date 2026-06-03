@@ -215,5 +215,6 @@ command list is hand-maintained and the CLI works offline.
 
 Releases are produced by [GoReleaser](https://goreleaser.com) on tag push
 (`vX.Y.Z`) via GitHub Actions: cross-platform binaries are attached to the
-GitHub Release and a multi-arch Docker image is published to GHCR. GoReleaser
-refreshes the embedded OpenAPI spec before each build.
+GitHub Release and a multi-arch Docker image is published to GHCR. Run
+`make spec-update` and commit the result before tagging so releases embed a
+known spec snapshot.

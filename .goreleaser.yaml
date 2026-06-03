@@ -5,7 +5,6 @@ project_name: debi
 before:
   hooks:
     - go mod tidy
-    - curl -fsSL https://raw.githubusercontent.com/debipro/openapi/refs/heads/main/openapi/spec1.yaml -o pkg/spec/openapi.yaml
 
 builds:
   - id: debi

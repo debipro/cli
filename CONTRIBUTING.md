@@ -54,7 +54,7 @@ Commit the updated `pkg/cmd/testdata/commands.golden`.
 
 Releases are automated via GoReleaser when a `v*.*.*` tag is pushed. The release workflow:
 
-1. Downloads the latest OpenAPI spec into the embed path
+1. Embeds the OpenAPI spec committed in `pkg/spec/openapi.yaml` (refresh with `make spec-update` before tagging)
 2. Builds cross-platform binaries
 3. Publishes Docker images to `ghcr.io/debipro/cli`
 
