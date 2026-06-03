@@ -1,0 +1,5 @@
+# Used by GoReleaser, which provides a prebuilt `debi` binary in the context.
+FROM alpine:3.20
+RUN apk add --no-cache ca-certificates
+COPY debi /usr/local/bin/debi
+ENTRYPOINT ["/usr/local/bin/debi"]
