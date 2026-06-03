@@ -7,7 +7,7 @@ right from the terminal — inspired by the Stripe CLI.
 With the CLI you can:
 
 - Authenticate once and store your secret key securely in your OS keychain.
-- Call any Debi endpoint with generic `get`/`post`/`put`/`patch`/`delete` commands.
+- Call any Debi endpoint with generic `get`/`post`/`put`/`delete` commands.
 - Use auto-generated resource commands (`debi customers list`,
   `debi payments create`, ...) built from Debi's OpenAPI specification.
 - Poll, replay, and forward webhook events while developing locally.
@@ -98,7 +98,6 @@ debi get /v1/customers -d limit=5
 debi get /v1/customers --auto-paginate
 debi post /v1/customers -d name="Jane Doe" -d email=jane@example.com
 debi put /v1/customers/CSxxxx -d email=new@example.com
-debi patch /v1/customers/CSxxxx -d email=new@example.com
 debi delete /v1/links/LKxxxx
 ```
 

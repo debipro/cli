@@ -23,7 +23,7 @@ func TestSmokeHelpAndSpec(t *testing.T) {
 		t.Fatalf("help: %v", err)
 	}
 	out := help.String()
-	for _, want := range []string{"customers", "login", "completion", "listen", "patch"} {
+	for _, want := range []string{"customers", "login", "completion", "listen"} {
 		if !strings.Contains(out, want) {
 			t.Errorf("help output missing %q", want)
 		}

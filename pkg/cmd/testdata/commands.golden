@@ -50,7 +50,6 @@ debi mandates restore
 debi mandates retrieve
 debi mandates revoke
 debi mandates search
-debi patch
 debi payment_methods attach
 debi payment_methods create
 debi payment_methods detach
