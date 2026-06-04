@@ -2,7 +2,7 @@
 
 `debi` is a command-line interface for the [Debi API](https://debi.pro/docs/api)
 (formerly TuCuota). It helps you build, test, and manage your Debi integration
-right from the terminal — inspired by the Stripe CLI.
+right from the terminal.
 
 With the CLI you can:
 
