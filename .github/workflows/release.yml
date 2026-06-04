@@ -33,3 +33,52 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+      - name: Upload per-OS checksum files
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          ./scripts/split-checksums.sh dist/checksums.txt /tmp/checksums
+          gh release upload "$TAG" \
+            /tmp/checksums/debi-linux-checksums.txt \
+            /tmp/checksums/debi-mac-checksums.txt \
+            /tmp/checksums/debi-windows-checksums.txt \
+            --clobber
+
+  smoke:
+    needs: goreleaser
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            pattern: debi_*_linux_x86_64.tar.gz
+          - runner: macos-latest
+            pattern: debi_*_mac-os_x86_64.tar.gz
+          - runner: windows-latest
+            pattern: debi_*_windows_x86_64.zip
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Download release artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p dist
+          gh release download "${{ github.ref_name }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "${{ matrix.pattern }}" \
+            --dir dist
+      - name: Extract and smoke test
+        shell: bash
+        run: |
+          cd dist
+          if ls debi_*_windows_x86_64.zip >/dev/null 2>&1; then
+            unzip -q debi_*_windows_x86_64.zip
+            ./debi.exe version
+            ./debi.exe --help | grep -q customers
+          else
+            tar xzf debi_*.tar.gz
+            ./debi version
+            ./debi --help | grep -q customers
+          fi

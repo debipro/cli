@@ -5,14 +5,26 @@ on:
     branches: [main, master]
   pull_request:
 
+env:
+  DEBI_KEYRING_PASSWORD: ci-test-passphrase
+
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: "1.25"
+      - name: Prepare config dir
+        shell: bash
+        run: |
+          echo "DEBI_CONFIG_DIR=${RUNNER_TEMP}/debi" >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/debi"
       - run: go vet ./...
       - run: go build ./...
       - run: go test ./...
@@ -29,16 +41,29 @@ jobs:
           version: v2.12
 
   smoke:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: "1.25"
-      - run: go build -o bin/debi ./cmd/debi
-      - run: |
-          export DEBI_CONFIG_DIR="${RUNNER_TEMP}/debi"
-          mkdir -p "$DEBI_CONFIG_DIR"
-          ./bin/debi --help | grep -q customers
-          ./bin/debi spec info | grep -q Paths
-          ./bin/debi customers --help | grep -q list
+      - name: Build and smoke test
+        shell: bash
+        run: |
+          echo "DEBI_CONFIG_DIR=${RUNNER_TEMP}/debi" >> "$GITHUB_ENV"
+          mkdir -p "${RUNNER_TEMP}/debi" bin
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            go build -o bin/debi.exe ./cmd/debi
+            ./bin/debi.exe --help | grep -q customers
+            ./bin/debi.exe spec info | grep -q Paths
+            ./bin/debi.exe customers --help | grep -q list
+          else
+            go build -o bin/debi ./cmd/debi
+            ./bin/debi --help | grep -q customers
+            ./bin/debi spec info | grep -q Paths
+            ./bin/debi customers --help | grep -q list
+          fi

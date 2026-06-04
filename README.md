@@ -34,13 +34,42 @@ Download the archive for your platform from the
 [Releases page](https://github.com/debipro/cli/releases), extract it, and
 place the `debi` binary on your `PATH`.
 
+Release assets use consistent platform naming, for example
+`debi_1.0.0_linux_x86_64.tar.gz`, `debi_1.0.0_mac-os_arm64.tar.gz`, and
+`debi_1.0.0_windows_x86_64.zip`. Per-OS checksum files
+(`debi-linux-checksums.txt`, etc.) are attached to each release.
+
 ### Homebrew
 
-After the first release, install from the tap (update checksums in
-[`formula/debi.rb`](formula/debi.rb) when publishing):
+```bash
+brew install debipro/tap/debi
+```
+
+GoReleaser updates [`debipro/homebrew-tap`](https://github.com/debipro/homebrew-tap)
+on each release. A reference formula lives in [`formula/debi.rb`](formula/debi.rb).
+
+### Linux packages
+
+Debian/Ubuntu:
 
 ```bash
-brew install ./formula/debi.rb
+sudo dpkg -i debi_*_linux_amd64.deb   # or linux_arm64.deb on ARM64
+```
+
+RHEL/Fedora:
+
+```bash
+sudo rpm -i debi_*_linux_amd64.rpm    # or linux_arm64.rpm on ARM64
+```
+
+Packages declare `libsecret` and `gnome-keyring` dependencies for OS keychain
+support on Linux.
+
+### Scoop (Windows)
+
+```bash
+scoop bucket add debi https://github.com/debipro/scoop-debi
+scoop install debi
 ```
 
 ### Docker
@@ -214,7 +243,8 @@ command list is hand-maintained and the CLI works offline.
 ## Releasing
 
 Releases are produced by [GoReleaser](https://goreleaser.com) on tag push
-(`vX.Y.Z`) via GitHub Actions: cross-platform binaries are attached to the
-GitHub Release and a multi-arch Docker image is published to GHCR. Run
-`make spec-update` and commit the result before tagging so releases embed a
-known spec snapshot.
+(`vX.Y.Z`) via GitHub Actions: cross-platform binaries, `.deb`/`.rpm` packages,
+per-OS checksum files, and a multi-arch Docker image are published to GitHub
+Releases and GHCR. The Homebrew tap, Scoop bucket, and winget manifest repos
+are updated automatically when `GH_PAT` is configured. Run `make spec-update`
+and commit the result before tagging so releases embed a known spec snapshot.
