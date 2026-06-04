@@ -37,7 +37,8 @@ func TestCommandTreeGolden(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read golden (run UPDATE_GOLDEN=1 go test ./pkg/cmd -run Golden): %v", err)
 	}
-	if string(wantBytes) != got {
+	want := strings.ReplaceAll(string(wantBytes), "\r\n", "\n")
+	if want != got {
 		t.Fatalf("command tree changed; run UPDATE_GOLDEN=1 go test ./pkg/cmd -run Golden to refresh")
 	}
 }

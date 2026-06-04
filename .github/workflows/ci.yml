@@ -55,13 +55,14 @@ jobs:
         shell: bash
         run: |
           echo "DEBI_CONFIG_DIR=${RUNNER_TEMP}/debi" >> "$GITHUB_ENV"
-          mkdir -p "${RUNNER_TEMP}/debi"
-          go build -o bin/debi ./cmd/debi
+          mkdir -p "${RUNNER_TEMP}/debi" bin
           if [[ "${{ runner.os }}" == "Windows" ]]; then
-            bin/debi.exe --help | grep -q customers
-            bin/debi.exe spec info | grep -q Paths
-            bin/debi.exe customers --help | grep -q list
+            go build -o bin/debi.exe ./cmd/debi
+            ./bin/debi.exe --help | grep -q customers
+            ./bin/debi.exe spec info | grep -q Paths
+            ./bin/debi.exe customers --help | grep -q list
           else
+            go build -o bin/debi ./cmd/debi
             ./bin/debi --help | grep -q customers
             ./bin/debi spec info | grep -q Paths
             ./bin/debi customers --help | grep -q list
