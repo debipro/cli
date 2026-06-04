@@ -245,6 +245,7 @@ command list is hand-maintained and the CLI works offline.
 Releases are produced by [GoReleaser](https://goreleaser.com) on tag push
 (`vX.Y.Z`) via GitHub Actions: cross-platform binaries, `.deb`/`.rpm` packages,
 per-OS checksum files, and a multi-arch Docker image are published to GitHub
-Releases and GHCR. The Homebrew tap, Scoop bucket, and winget manifest repos
-are updated automatically when `GH_PAT` is configured. Run `make spec-update`
+Releases and GHCR. The Homebrew tap, Scoop bucket, and winget fork are updated
+automatically when `GH_PAT` is configured; open the winget upstream PR manually
+from `debipro/winget-pkgs`. Run `make spec-update`
 and commit the result before tagging so releases embed a known spec snapshot.

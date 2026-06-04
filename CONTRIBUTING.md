@@ -57,10 +57,12 @@ Releases are automated via GoReleaser when a `v*.*.*` tag is pushed. The release
 1. Embeds the OpenAPI spec committed in `pkg/spec/openapi.yaml` (refresh with `make spec-update` before tagging)
 2. Builds cross-platform binaries, `.deb`/`.rpm` packages, and per-OS checksum files
 3. Publishes Docker images to `ghcr.io/debipro/cli`
-4. Updates `debipro/homebrew-tap`, `debipro/scoop-debi`, and opens a winget PR (requires `GH_PAT` secret)
+4. Updates `debipro/homebrew-tap`, `debipro/scoop-debi`, and pushes winget manifests to `debipro/winget-pkgs` (requires `GH_PAT` secret)
 
 Create empty GitHub repos `debipro/homebrew-tap`, `debipro/scoop-debi`, and fork
 `microsoft/winget-pkgs` to `debipro/winget-pkgs` before the first release that
 uses package-manager publishing.
+
+After each release, open a winget PR manually from `debipro/winget-pkgs:debi-cli-<version>` to `microsoft/winget-pkgs:master`.
 
 See [README.md](README.md#releasing) for details.

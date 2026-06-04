@@ -110,12 +110,10 @@ winget:
       name: winget-pkgs
       branch: "debi-cli-{{ .Version }}"
       token: "{{ .Env.GH_PAT }}"
+      # Upstream PR must be opened manually from debipro/winget-pkgs — a
+      # fine-grained GH_PAT cannot POST to microsoft/winget-pkgs.
       pull_request:
-        enabled: true
-        base:
-          owner: microsoft
-          name: winget-pkgs
-          branch: master
+        enabled: false
 
 snapshot:
   version_template: "{{ incpatch .Version }}-next"
