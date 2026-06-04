@@ -3114,7 +3114,7 @@ paths:
           in: query
           description: |
             A cursor for pagination across multiple pages of results. Don’t include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
-          required: true
+          required: false
           schema:
             type: string
           example: john doe
@@ -4463,9 +4463,11 @@ paths:
                   message:
                     type: string
                   errors:
-                    type: array
-                    items:
-                      type: string
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                 example:
                   errors:
                     email:
@@ -4524,9 +4526,11 @@ paths:
                   message:
                     type: string
                   errors:
-                    type: array
-                    items:
-                      type: string
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                 example:
                   errors:
                     email:
@@ -4934,9 +4938,11 @@ paths:
                   message:
                     type: string
                   errors:
-                    type: array
-                    items:
-                      type: string
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                 example:
                   errors:
                     email:
@@ -5936,8 +5942,23 @@ paths:
                           description: |
                             A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                           type:
-                            - object
+                            - array
                             - 'null'
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              type:
+                                type: string
+                              label:
+                                type: string
+                              required:
+                                type: boolean
+                              options:
+                                type: object
+                                additionalProperties:
+                                  type: string
                           example:
                             - name: source
                               type: select
@@ -5951,8 +5972,23 @@ paths:
                           description: |
                             A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                           type:
-                            - object
+                            - array
                             - 'null'
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              type:
+                                type: string
+                              label:
+                                type: string
+                              required:
+                                type: boolean
+                              options:
+                                type: object
+                                additionalProperties:
+                                  type: string
                           example:
                             - name: identification_type
                               type: select
@@ -6290,8 +6326,23 @@ paths:
                   description: |
                     A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                   type:
-                    - object
+                    - array
                     - 'null'
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      label:
+                        type: string
+                      required:
+                        type: boolean
+                      options:
+                        type: object
+                        additionalProperties:
+                          type: string
                   example:
                     - name: source
                       type: select
@@ -6305,8 +6356,23 @@ paths:
                   description: |
                     A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                   type:
-                    - object
+                    - array
                     - 'null'
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      label:
+                        type: string
+                      required:
+                        type: boolean
+                      options:
+                        type: object
+                        additionalProperties:
+                          type: string
                   example:
                     - name: identification_type
                       type: select
@@ -6496,8 +6562,23 @@ paths:
                         description: |
                           A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                         type:
-                          - object
+                          - array
                           - 'null'
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            label:
+                              type: string
+                            required:
+                              type: boolean
+                            options:
+                              type: object
+                              additionalProperties:
+                                type: string
                         example:
                           - name: source
                             type: select
@@ -6511,8 +6592,23 @@ paths:
                         description: |
                           A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                         type:
-                          - object
+                          - array
                           - 'null'
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            label:
+                              type: string
+                            required:
+                              type: boolean
+                            options:
+                              type: object
+                              additionalProperties:
+                                type: string
                         example:
                           - name: identification_type
                             type: select
@@ -6762,8 +6858,23 @@ paths:
                         description: |
                           A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                         type:
-                          - object
+                          - array
                           - 'null'
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            label:
+                              type: string
+                            required:
+                              type: boolean
+                            options:
+                              type: object
+                              additionalProperties:
+                                type: string
                         example:
                           - name: source
                             type: select
@@ -6777,8 +6888,23 @@ paths:
                         description: |
                           A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                         type:
-                          - object
+                          - array
                           - 'null'
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            label:
+                              type: string
+                            required:
+                              type: boolean
+                            options:
+                              type: object
+                              additionalProperties:
+                                type: string
                         example:
                           - name: identification_type
                             type: select
@@ -7086,8 +7212,23 @@ paths:
                   description: |
                     A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                   type:
-                    - object
+                    - array
                     - 'null'
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      label:
+                        type: string
+                      required:
+                        type: boolean
+                      options:
+                        type: object
+                        additionalProperties:
+                          type: string
                   example:
                     - name: source
                       type: select
@@ -7101,8 +7242,23 @@ paths:
                   description: |
                     A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                   type:
-                    - object
+                    - array
                     - 'null'
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      label:
+                        type: string
+                      required:
+                        type: boolean
+                      options:
+                        type: object
+                        additionalProperties:
+                          type: string
                   example:
                     - name: identification_type
                       type: select
@@ -7280,8 +7436,23 @@ paths:
                         description: |
                           A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                         type:
-                          - object
+                          - array
                           - 'null'
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            label:
+                              type: string
+                            required:
+                              type: boolean
+                            options:
+                              type: object
+                              additionalProperties:
+                                type: string
                         example:
                           - name: source
                             type: select
@@ -7295,8 +7466,23 @@ paths:
                         description: |
                           A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                         type:
-                          - object
+                          - array
                           - 'null'
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            label:
+                              type: string
+                            required:
+                              type: boolean
+                            options:
+                              type: object
+                              additionalProperties:
+                                type: string
                         example:
                           - name: identification_type
                             type: select
@@ -7508,9 +7694,11 @@ paths:
                   message:
                     type: string
                   errors:
-                    type: array
-                    items:
-                      type: string
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                 example:
                   errors:
                     email:
@@ -7643,9 +7831,11 @@ paths:
                   message:
                     type: string
                   errors:
-                    type: array
-                    items:
-                      type: string
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                 example:
                   errors:
                     email:
@@ -8931,7 +9121,7 @@ paths:
           in: query
           description: |
             A cursor for pagination across multiple pages of results. Don’t include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
-          required: true
+          required: false
           schema:
             type: string
           example: john doe
@@ -10951,7 +11141,7 @@ paths:
           in: query
           description: |
             A cursor for pagination across multiple pages of results. Don’t include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
-          required: true
+          required: false
           schema:
             type: string
           example: john doe
@@ -11403,9 +11593,11 @@ paths:
                   message:
                     type: string
                   errors:
-                    type: array
-                    items:
-                      type: string
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                 example:
                   errors:
                     email:
@@ -15519,9 +15711,11 @@ paths:
                   message:
                     type: string
                   errors:
-                    type: array
-                    items:
-                      type: string
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                 example:
                   errors:
                     email:
@@ -15755,9 +15949,11 @@ paths:
                   message:
                     type: string
                   errors:
-                    type: array
-                    items:
-                      type: string
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                 example:
                   errors:
                     email:
@@ -15791,7 +15987,7 @@ paths:
           in: query
           description: |
             A cursor for pagination across multiple pages of results. Don’t include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
-          required: true
+          required: false
           schema:
             type: string
           example: john doe
@@ -17205,7 +17401,7 @@ paths:
                   type: integer
                 day_of_month:
                   description: |
-                    Only for subscriptions, the day of month, from 1 to 28. Use only if you need the subscription to start in a specyfic date. In most cases this should be null, therefore Debi will use the date of the moment when the user completes the checkout.
+                    Only for subscriptions, the day of month, from 1 to 31, or -1 for the last day of the month. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month. Use only if you need the subscription to start in a specyfic date. In most cases this should be null, therefore Debi will use the date of the moment when the user completes the checkout.
                   type: integer
                 day_of_week:
                   description: |
@@ -17241,8 +17437,23 @@ paths:
                   description: |
                     A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                   type:
-                    - object
+                    - array
                     - 'null'
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      label:
+                        type: string
+                      required:
+                        type: boolean
+                      options:
+                        type: object
+                        additionalProperties:
+                          type: string
                   example:
                     - name: source
                       type: select
@@ -17256,8 +17467,23 @@ paths:
                   description: |
                     A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
                   type:
-                    - object
+                    - array
                     - 'null'
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      label:
+                        type: string
+                      required:
+                        type: boolean
+                      options:
+                        type: object
+                        additionalProperties:
+                          type: string
                   example:
                     - name: identification_type
                       type: select
@@ -17443,7 +17669,7 @@ paths:
                         description: Only for subscriptions. Number of `interval_units` between customer charge dates. Must be greater than to 1. If `interval_units` is `weekly` and interval is 2, then the customer will be charged every two weeks. Defaults to 1.
                         type: number
                       day_of_month:
-                        description: Day of month, from 1 to 28. This field is required if interval_unit is set to monthly. Defaults to 1.
+                        description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if interval_unit is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                         type: number
                       day_of_week:
                         description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -17691,7 +17917,7 @@ paths:
                         description: Only for subscriptions. Number of `interval_units` between customer charge dates. Must be greater than to 1. If `interval_units` is `weekly` and interval is 2, then the customer will be charged every two weeks. Defaults to 1.
                         type: number
                       day_of_month:
-                        description: Day of month, from 1 to 28. This field is required if interval_unit is set to monthly. Defaults to 1.
+                        description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if interval_unit is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                         type: number
                       day_of_week:
                         description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -17975,7 +18201,7 @@ paths:
                           type: number
                           example: 1
                         day_of_month:
-                          description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+                          description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                           type: number
                         day_of_week:
                           description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -18570,7 +18796,7 @@ paths:
                   description: Number of `interval_units` between customer charge dates. Must be greater than to 1. If `interval_units` is `weekly` and interval is 2, then the customer will be charged every two weeks. Defaults to 1.
                   type: number
                 day_of_month:
-                  description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+                  description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                   type: number
                 day_of_week:
                   description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -18695,7 +18921,7 @@ paths:
                         type: number
                         example: 1
                       day_of_month:
-                        description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+                        description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                         type: number
                       day_of_week:
                         description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -19354,7 +19580,7 @@ paths:
                         type: number
                         example: 1
                       day_of_month:
-                        description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+                        description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                         type: number
                       day_of_week:
                         description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -19920,7 +20146,7 @@ paths:
                   description: Number of interval_units between customer charge dates. Must be greater than to 1. If interval_unit is weekly and interval is 2, then the customer will be charged every two weeks. Defaults to 1. Example 1
                   type: number
                 day_of_month:
-                  description: Day of month, from 1 to 28. This field is required if interval_unit is set to monthly. Defaults to 1.
+                  description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if interval_unit is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                   type: number
                 day_of_week:
                   description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -20100,7 +20326,7 @@ paths:
                         type: number
                         example: 1
                       day_of_month:
-                        description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+                        description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                         type: number
                       day_of_week:
                         description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -20691,7 +20917,7 @@ paths:
                         type: number
                         example: 1
                       day_of_month:
-                        description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+                        description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                         type: number
                       day_of_week:
                         description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -21280,7 +21506,7 @@ paths:
                         type: number
                         example: 1
                       day_of_month:
-                        description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+                        description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                         type: number
                       day_of_week:
                         description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -21875,7 +22101,7 @@ paths:
                         type: number
                         example: 1
                       day_of_month:
-                        description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+                        description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                         type: number
                       day_of_week:
                         description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -22404,7 +22630,7 @@ paths:
           in: query
           description: |
             A cursor for pagination across multiple pages of results. Don’t include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
-          required: true
+          required: false
           schema:
             type: string
           example: john doe
@@ -22487,7 +22713,7 @@ paths:
                           type: number
                           example: 1
                         day_of_month:
-                          description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+                          description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
                           type: number
                         day_of_week:
                           description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -25217,9 +25443,11 @@ components:
         message:
           type: string
         errors:
-          type: array
-          items:
-            type: string
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
       example:
         errors:
           email:
@@ -25482,8 +25710,23 @@ components:
       description: |
         A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
       type:
-        - object
+        - array
         - 'null'
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          type:
+            type: string
+          label:
+            type: string
+          required:
+            type: boolean
+          options:
+            type: object
+            additionalProperties:
+              type: string
       example:
         - name: source
           type: select
@@ -25497,8 +25740,23 @@ components:
       description: |
         A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
       type:
-        - object
+        - array
         - 'null'
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          type:
+            type: string
+          label:
+            type: string
+          required:
+            type: boolean
+          options:
+            type: object
+            additionalProperties:
+              type: string
       example:
         - name: identification_type
           type: select
@@ -25558,8 +25816,23 @@ components:
           description: |
             A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
           type:
-            - object
+            - array
             - 'null'
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+              label:
+                type: string
+              required:
+                type: boolean
+              options:
+                type: object
+                additionalProperties:
+                  type: string
           example:
             - name: source
               type: select
@@ -25573,8 +25846,23 @@ components:
           description: |
             A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
           type:
-            - object
+            - array
             - 'null'
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+              label:
+                type: string
+              required:
+                type: boolean
+              options:
+                type: object
+                additionalProperties:
+                  type: string
           example:
             - name: identification_type
               type: select
@@ -27081,7 +27369,7 @@ components:
           description: Only for subscriptions. Number of `interval_units` between customer charge dates. Must be greater than to 1. If `interval_units` is `weekly` and interval is 2, then the customer will be charged every two weeks. Defaults to 1.
           type: number
         day_of_month:
-          description: Day of month, from 1 to 28. This field is required if interval_unit is set to monthly. Defaults to 1.
+          description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if interval_unit is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
           type: number
         day_of_week:
           description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -27275,7 +27563,7 @@ components:
           type: number
           example: 1
         day_of_month:
-          description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+          description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
           type: number
         day_of_week:
           description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -28706,8 +28994,23 @@ components:
           description: |
             A collection of fields designed to be stored as [the metadata](#section/Metadata) of the object that the Session is generating  whether it's a [Payment](#tag/Payments), [Subscription](#tag/Subscriptions), or [Mandate](#tag/Mandates). This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
           type:
-            - object
+            - array
             - 'null'
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+              label:
+                type: string
+              required:
+                type: boolean
+              options:
+                type: object
+                additionalProperties:
+                  type: string
           example:
             - name: source
               type: select
@@ -28721,8 +29024,23 @@ components:
           description: |
             A collection of fields designed to be stored as [the metadata](#section/Metadata) of the [Customer](#tag/Customers) that the Session is generating. This functionality enables you to request extra information from the user during the checkout process, providing a means to store supplementary details about the object in a well-organized format.
           type:
-            - object
+            - array
             - 'null'
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+              label:
+                type: string
+              required:
+                type: boolean
+              options:
+                type: object
+                additionalProperties:
+                  type: string
           example:
             - name: identification_type
               type: select
@@ -30498,7 +30816,7 @@ components:
           description: Only for subscriptions. Number of `interval_units` between customer charge dates. Must be greater than to 1. If `interval_units` is `weekly` and interval is 2, then the customer will be charged every two weeks. Defaults to 1.
           type: number
         day_of_month:
-          description: Day of month, from 1 to 28. This field is required if interval_unit is set to monthly. Defaults to 1.
+          description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if interval_unit is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
           type: number
         day_of_week:
           description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
@@ -30692,7 +31010,7 @@ components:
           type: number
           example: 1
         day_of_month:
-          description: Day of month, from 1 to 28. This field is required if `interval_unit` is set to monthly. Defaults to 1.
+          description: Day of month, from 1 to 31, or -1 for the last day of the month. This field is required if `interval_unit` is set to monthly. Defaults to 1. If the chosen day doesn't exist in a given month (e.g. 30 or 31 in February), the payment is charged on the last day of that month.
           type: number
         day_of_week:
           description: Day of week number, from 0 (Sunday) to 6 (Saturday). This field is required if `interval_unit` is set to `weekly`.
