@@ -6,7 +6,6 @@ on:
   pull_request:
 
 env:
-  DEBI_CONFIG_DIR: ${{ runner.temp }}/debi
   DEBI_KEYRING_PASSWORD: ci-test-passphrase
 
 jobs:
@@ -16,6 +15,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      DEBI_CONFIG_DIR: ${{ runner.temp }}/debi
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -45,6 +46,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      DEBI_CONFIG_DIR: ${{ runner.temp }}/debi
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
