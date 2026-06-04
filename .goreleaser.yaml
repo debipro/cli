@@ -26,13 +26,96 @@ archives:
   - id: debi
     formats: [tar.gz]
     name_template: >-
-      {{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+      {{ .ProjectName }}_{{ .Version }}_
+      {{- if eq .Os "darwin" }}mac-os
+      {{- else }}{{ .Os }}{{ end }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
     format_overrides:
       - goos: windows
         formats: [zip]
+    files:
+      - none*
 
 checksum:
   name_template: checksums.txt
+
+nfpms:
+  - id: deb
+    package_name: debi
+    vendor: Debi
+    homepage: https://debi.pro
+    maintainer: Debi <support@debi.pro>
+    description: Command-line interface for the Debi API
+    license: MIT
+    formats: [deb]
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    dependencies:
+      - libsecret-1-0
+      - gnome-keyring
+  - id: rpm
+    package_name: debi
+    vendor: Debi
+    homepage: https://debi.pro
+    maintainer: Debi <support@debi.pro>
+    description: Command-line interface for the Debi API
+    license: MIT
+    formats: [rpm]
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+brews:
+  - name: debi
+    ids: [debi]
+    directory: Formula
+    homepage: https://debi.pro
+    description: Command-line interface for the Debi API
+    license: MIT
+    skip_upload: "{{ if not .Env.GH_PAT }}true{{ end }}"
+    install: |
+      bin.install "debi"
+    test: |
+      assert_match "debi", shell_output("#{bin}/debi version")
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    repository:
+      owner: debipro
+      name: homebrew-tap
+      token: "{{ .Env.GH_PAT }}"
+
+scoops:
+  - name: debi
+    ids: [debi]
+    homepage: https://debi.pro
+    description: Command-line interface for the Debi API
+    license: MIT
+    skip_upload: "{{ if not .Env.GH_PAT }}true{{ end }}"
+    commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
+    repository:
+      owner: debipro
+      name: scoop-debi
+      token: "{{ .Env.GH_PAT }}"
+
+winget:
+  - name: debi
+    ids: [debi]
+    publisher: Debi
+    short_description: Command-line interface for the Debi API
+    license: MIT
+    publisher_url: https://debi.pro
+    homepage: https://debi.pro
+    package_identifier: Debi.DebiCli
+    skip_upload: "{{ if not .Env.GH_PAT }}true{{ end }}"
+    commit_msg_template: "Winget manifest for {{ .ProjectName }} version {{ .Tag }}"
+    repository:
+      owner: debipro
+      name: winget-pkgs
+      branch: "debi-cli-{{ .Version }}"
+      token: "{{ .Env.GH_PAT }}"
+      pull_request:
+        enabled: true
+        base:
+          owner: microsoft
+          name: winget-pkgs
+          branch: master
 
 snapshot:
   version_template: "{{ incpatch .Version }}-next"
@@ -72,6 +155,7 @@ docker_manifests:
       - "ghcr.io/debipro/cli:{{ .Version }}-arm64"
 
 release:
+  replace_existing_artifacts: true
   github:
     owner: debipro
     name: cli
