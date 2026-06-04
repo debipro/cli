@@ -65,4 +65,6 @@ uses package-manager publishing.
 
 After each release, open a winget PR manually from `debipro/winget-pkgs:debi-cli-<version>` to `microsoft/winget-pkgs:master`.
 
+**Immutable releases:** push the tag only — do not create or publish a GitHub release from the UI. CI creates a draft release, uploads all assets (including per-OS checksum files), runs smoke tests, then publishes. If a release fails, delete the draft release and tag, then cut a new patch version; do not re-run on the same tag.
+
 See [README.md](README.md#releasing) for details.

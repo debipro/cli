@@ -44,7 +44,7 @@ jobs:
             /tmp/checksums/debi-linux-checksums.txt \
             /tmp/checksums/debi-mac-checksums.txt \
             /tmp/checksums/debi-windows-checksums.txt \
-            --clobber
+            --repo "${{ github.repository }}"
 
   smoke:
     needs: goreleaser
@@ -83,3 +83,12 @@ jobs:
             ./debi version
             ./debi --help | grep -q customers
           fi
+
+  publish:
+    needs: smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit "${{ github.ref_name }}" --repo "${{ github.repository }}" --draft=false

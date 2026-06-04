@@ -153,7 +153,9 @@ docker_manifests:
       - "ghcr.io/debipro/cli:{{ .Version }}-arm64"
 
 release:
-  replace_existing_artifacts: true
+  # Stay draft until CI smoke tests pass and publish the release explicitly.
+  # Required for GitHub immutable releases: all assets must be attached before publish.
+  draft: true
   github:
     owner: debipro
     name: cli
