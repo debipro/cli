@@ -31,6 +31,32 @@ func TestLoadEmbedded(t *testing.T) {
 	}
 }
 
+func TestReturnsSingleton(t *testing.T) {
+	t.Setenv("DEBI_CONFIG_DIR", t.TempDir())
+
+	s, err := Load()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	cases := map[string]bool{
+		"/v1/account":                 true,
+		"/v1/account/payment_methods": true,
+		"/v1/customers":               false,
+		"/v1/gateways":                false,
+	}
+
+	for path, want := range cases {
+		item, ok := s.Paths[path]
+		if !ok || item.Get == nil {
+			t.Fatalf("expected GET %s in embedded spec", path)
+		}
+		if got := item.Get.ReturnsSingleton(); got != want {
+			t.Errorf("GET %s ReturnsSingleton() = %t; want %t", path, got, want)
+		}
+	}
+}
+
 func TestTypeFieldUnmarshal(t *testing.T) {
 	var scalar struct {
 		Type TypeField `yaml:"type"`

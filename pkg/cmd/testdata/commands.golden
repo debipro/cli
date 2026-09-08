@@ -1,3 +1,5 @@
+debi account payment_methods retrieve
+debi account retrieve
 debi billing_portal configurations create
 debi billing_portal configurations list
 debi billing_portal configurations retrieve
@@ -19,6 +21,7 @@ debi customers search
 debi customers update
 debi delete
 debi events list
+debi events replay
 debi events resend
 debi events retrieve
 debi events tail
@@ -27,12 +30,18 @@ debi events verify
 debi exports create
 debi exports list
 debi exports retrieve
+debi gateways create
 debi gateways disable
 debi gateways enable
 debi gateways list
+debi gateways mercado-pago create
+debi gateways retrieve
+debi gateways update
 debi get
+debi imports cancel
 debi imports create
 debi imports list
+debi imports process
 debi imports retrieve
 debi imports rows
 debi links create
@@ -51,6 +60,7 @@ debi mandates retrieve
 debi mandates revoke
 debi mandates search
 debi payment_methods attach
+debi payment_methods cc_bins create
 debi payment_methods create
 debi payment_methods detach
 debi payment_methods list
@@ -86,8 +96,10 @@ debi subscriptions retrieve
 debi subscriptions search
 debi subscriptions update
 debi version
+debi webhook_messages resend
 debi webhooks create
 debi webhooks delete
 debi webhooks list
+debi webhooks messages
 debi webhooks retrieve
 debi webhooks update

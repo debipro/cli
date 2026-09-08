@@ -27,7 +27,7 @@ func (a *App) eventsCmd() *cobra.Command {
 	}
 	cmd.AddCommand(
 		a.eventsTailCmd(),
-		a.eventsResendCmd(),
+		a.eventsReplayCmd(),
 		a.eventsVerifyCmd(),
 		a.eventsTriggerCmd(),
 	)
@@ -155,18 +155,20 @@ func (a *App) eventsTailCmd() *cobra.Command {
 	return cmd
 }
 
-func (a *App) eventsResendCmd() *cobra.Command {
+func (a *App) eventsReplayCmd() *cobra.Command {
 	var (
 		forwardTo     string
 		webhookSecret string
 	)
 
 	cmd := &cobra.Command{
-		Use:   "resend <event_id>",
-		Short: "Re-deliver a stored event's payload to a local endpoint",
+		Use:   "replay <event_id>",
+		Short: "Replay a stored event's payload to a local endpoint",
 		Long: "Fetches a stored event via GET /v1/events/{id} and re-POSTs its payload to\n" +
 			"the URL given by --forward-to (client-side replay for local development).\n" +
 			"Without --forward-to, the event is printed.\n\n" +
+			"This never touches your registered webhook endpoints; use `debi events\n" +
+			"resend` for server-side re-delivery.\n\n" +
 			"Security: --forward-to only accepts http://127.0.0.1, http://localhost, and\n" +
 			"http://[::1] URLs by default to reduce accidental SSRF.",
 		Args: cobra.ExactArgs(1),

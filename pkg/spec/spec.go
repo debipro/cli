@@ -73,11 +73,51 @@ func (p *PathItem) Operations() []MethodOperation {
 
 // Operation describes a single API operation.
 type Operation struct {
-	OperationID string       `yaml:"operationId"`
-	Summary     string       `yaml:"summary"`
-	Description string       `yaml:"description"`
-	Parameters  []*Parameter `yaml:"parameters"`
-	RequestBody *RequestBody `yaml:"requestBody"`
+	OperationID string               `yaml:"operationId"`
+	Summary     string               `yaml:"summary"`
+	Description string               `yaml:"description"`
+	Parameters  []*Parameter         `yaml:"parameters"`
+	RequestBody *RequestBody         `yaml:"requestBody"`
+	Responses   map[string]*Response `yaml:"responses"`
+}
+
+// ReturnsSingleton reports whether a success response wraps a single object,
+// rather than an array, in its "data" property. Collection-style paths such as
+// GET /v1/account are singletons and read better as "retrieve" than "list".
+// The shape must be positively identified; anything ambiguous is treated as a
+// collection so unrecognized responses keep the plural default.
+func (o *Operation) ReturnsSingleton() bool {
+	if o == nil {
+		return false
+	}
+	for _, code := range []string{"200", "201"} {
+		schema := o.Responses[code].JSONSchema()
+		if schema == nil {
+			continue
+		}
+		data, ok := schema.Properties["data"]
+		if !ok || data == nil {
+			continue
+		}
+		return data.Type.Primary() == "object"
+	}
+	return false
+}
+
+// Response describes a single response entry.
+type Response struct {
+	Content map[string]*MediaType `yaml:"content"`
+}
+
+// JSONSchema returns the schema for application/json content, if present.
+func (r *Response) JSONSchema() *Schema {
+	if r == nil {
+		return nil
+	}
+	if mt, ok := r.Content["application/json"]; ok && mt != nil {
+		return mt.Schema
+	}
+	return nil
 }
 
 // Parameter describes a path, query or header parameter.

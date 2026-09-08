@@ -40,7 +40,7 @@ func (a *App) addResourceCommands(root *cobra.Command) error {
 	for _, path := range paths {
 		item := s.Paths[path]
 		for _, mo := range item.Operations() {
-			info := analyzePath(path, mo.Method)
+			info := analyzePath(path, mo.Method, mo.Operation.ReturnsSingleton())
 			if len(info.Namespace) == 0 {
 				continue
 			}
@@ -63,7 +63,10 @@ type opInfo struct {
 	PathParams []string
 }
 
-func analyzePath(path, method string) opInfo {
+// analyzePath maps a path and method onto a command shape. singleton reports
+// whether the operation returns one object instead of a collection, which is
+// the only way to tell GET /v1/account from GET /v1/customers.
+func analyzePath(path, method string, singleton bool) opInfo {
 	trimmed := strings.Trim(strings.TrimPrefix(path, "/v1/"), "/")
 	segs := strings.Split(trimmed, "/")
 
@@ -106,7 +109,7 @@ func analyzePath(path, method string) opInfo {
 	case seenParam:
 		return opInfo{Namespace: staticBeforeParam, Leaf: snakeCase(last), PathParams: pathParams}
 	default:
-		return opInfo{Namespace: allStatic, Leaf: verbForCollection(method), PathParams: pathParams}
+		return opInfo{Namespace: allStatic, Leaf: verbForCollection(method, singleton), PathParams: pathParams}
 	}
 }
 
@@ -123,9 +126,12 @@ func verbForItem(method string) string {
 	}
 }
 
-func verbForCollection(method string) string {
+func verbForCollection(method string, singleton bool) string {
 	switch method {
 	case "GET":
+		if singleton {
+			return "retrieve"
+		}
 		return "list"
 	case "POST":
 		return "create"

@@ -186,8 +186,11 @@ debi events tail --forward-to http://127.0.0.1:4242/ --webhook-secret whsec_...
 # Run a local receiver (verify signatures with --webhook-secret).
 debi listen 4242 --webhook-secret whsec_...
 
-# Re-deliver a stored event's payload to a local endpoint (localhost only).
-debi events resend EVxxxx --forward-to http://127.0.0.1:3000/webhooks --webhook-secret whsec_...
+# Replay a stored event's payload to a local endpoint (localhost only).
+debi events replay EVxxxx --forward-to http://127.0.0.1:3000/webhooks --webhook-secret whsec_...
+
+# Ask Debi to re-deliver an event to your registered webhook endpoints.
+debi events resend EVxxxx
 
 # Run sandbox scenarios that emit events.
 debi events trigger customer.created
@@ -196,10 +199,14 @@ debi events trigger customer.created
 echo '{"id":"EV..."}' | debi events verify --webhook-secret whsec_... --signature 't=...,v1=...'
 ```
 
-**Security:** `events resend` and `events tail --forward-to` only allow
+**Security:** `events replay` and `events tail --forward-to` only allow
 `http://127.0.0.1`, `http://localhost`, and `http://[::1]` targets to reduce
 accidental SSRF. Use `debi listen` plus a tunnel (ngrok, cloudflared) when you
 need a public URL for the Debi dashboard.
+
+Note that `events replay` forwards to a local endpoint and never touches your
+registered webhook endpoints, whereas `events resend` asks the API to
+re-deliver to them for real.
 
 ### Output
 
